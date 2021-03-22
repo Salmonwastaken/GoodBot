@@ -16,15 +16,13 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 client = discord.Client()
 
-
-
 #runs any time a message gets sent               
 @client.event
 async def on_message(message):
     author = message.author.id
     channel = message.channel
-    #Check if author of message is bot (bot doesn't need experience or levels.)
     
+    #Check if author of message is bot (bot doesn't need experience or levels.)
     if message.author.bot == False:
         #check if author already exists in Database
         t = (author,)
@@ -38,11 +36,13 @@ async def on_message(message):
             varx = (newxp, author)
             cur.execute('UPDATE experience SET experience = ? WHERE authorID=? ', varx)
             con.commit()
-            #janky level check, but it works and no database useage required
+            #Every 100 EXP is considered 1 level, no scaling involved.
+            #This just checks if they're at a number divisible by 100 and then congratulates them on whatever level they reached
             modulus = newxp % 100
             level = newxp // 100
             if modulus == 0:
                 await channel.send('Congrats ' + message.author.mention + ' you leveled up! Your level is now ' + str(level))
+        #and if they don't exist, we add them with 0 experience
         else:
             cur.execute('INSERT INTO experience VALUES (?,0)', t)
             con.commit()   
