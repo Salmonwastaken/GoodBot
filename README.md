@@ -1,2 +1,2 @@
 # GoodBot
-Just a repository for my Discord bot, doesn't do much besides tracking user XP in a database at the moment.
+Well, discord.py has been halted. So I'll archive this
